@@ -1,5 +1,6 @@
 package com.pmss0168.employeeservice.command.controller;
 
+import com.pmss0168.commonservice.service.KafkaService;
 import com.pmss0168.employeeservice.command.command.CreateEmployeeCommand;
 import com.pmss0168.employeeservice.command.command.DeleteEmployeeCommand;
 import com.pmss0168.employeeservice.command.command.UpdateEmployeeCommand;
@@ -20,6 +21,8 @@ import java.util.UUID;
 public class EmployeeCommandController {
     @Autowired
     private CommandGateway commandGateway;
+    @Autowired
+    private KafkaService kafkaService;
 
     @PostMapping
     public String createEmployee(@Valid @RequestBody CreateEmployeeRequestModel request) {
@@ -52,6 +55,12 @@ public class EmployeeCommandController {
                 .id(employeeId)
                 .build();
         return commandGateway.sendAndWait(command);
+    }
+
+    //Test Kafka
+    @PostMapping("/kafka/sendMessage")
+    public void sendMessage(@RequestBody String request) {
+        kafkaService.sendMessage("test", request);
     }
 
 }

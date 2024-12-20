@@ -1,6 +1,10 @@
 spring:
   application:
     name: ApiGateway
+  data:
+    redis:
+      port: 6379
+      host: localhost
   cloud:
     gateway:
 #Cấu hình với Load Balancer
@@ -12,6 +16,25 @@ spring:
           uri: lb://EmployeeService
           predicates:
             - Path=/api/v1/employees/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 50   #Nạp lại được ? token trong 1s
+                redis-rate-limiter.burstCapacity: 100  #Tối đa có ? request trong một token
+                redis-rate-limiter.requestedTokens: 1   #1 request cần ? token
+            - KeyAuthFilter
+        - id: BookService
+          uri: lb://BookService
+          predicates:
+            - Path=/api/v1/books/**
+#Cấu hình rate limiter
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 50   #Nạp lại được ? token trong 1s
+                redis-rate-limiter.burstCapacity: 100  #Tối đa có ? request trong một token
+                redis-rate-limiter.requestedTokens: 1   #1 request cần ? token
+            - KeyAuthFilter
 #Cấu hình thủ công
 #      routes:
 #        - id: EmployeeService
@@ -28,3 +51,4 @@ eureka:
       defaultZone: http://localhost:8761/eureka
     register-with-eureka: true
     fetch-registry: true
+auth-key: PmsS0168
