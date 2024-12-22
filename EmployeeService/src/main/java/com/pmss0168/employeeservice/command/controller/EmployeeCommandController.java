@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -59,8 +60,9 @@ public class EmployeeCommandController {
 
     //Test Kafka
     @PostMapping("/kafka/sendMessage")
-    public void sendMessage(@RequestBody String request) {
+    public ResponseEntity<String> sendMessage(@RequestBody String request) {
         kafkaService.sendMessage("test", request);
+        return ResponseEntity.ok("Message sent: " + request);
     }
 
 }

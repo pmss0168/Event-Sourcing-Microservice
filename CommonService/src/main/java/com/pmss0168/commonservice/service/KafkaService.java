@@ -13,6 +13,6 @@ public class KafkaService {
 
     public void sendMessage(String topic, String message) {
         kafkaTemplate.send(topic, message);
-        log.info("Message sent to topic " + topic);
+        log.info("Message sent to topic: {} {}", topic, message);
     }
 }

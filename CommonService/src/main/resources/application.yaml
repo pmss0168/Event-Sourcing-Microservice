@@ -5,5 +5,6 @@ spring:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     consumer:
       group-id: ${KAFKA_GROUP_ID:default-group}
+      auto-offset-reset: ${KAFKA_AUTO_OFFSET_RESET:earliest}
 server:
-  port: 9999
+  port: 9000

@@ -2,8 +2,10 @@ spring:
   application:
     name: NotificationService
   kafka:
+    bootstrap-servers: localhost:9092
     consumer:
       group-id: notification-group
+      auto-offset-reset: earliest
 server:
   port: 9003
 eureka:

@@ -4,9 +4,11 @@ import com.pmss0168.bookservice.command.command.CreateBookCommand;
 import com.pmss0168.bookservice.command.command.DeleteBookCommand;
 import com.pmss0168.bookservice.command.command.UpdateBookCommand;
 import com.pmss0168.bookservice.command.model.BookRequestModel;
+import com.pmss0168.commonservice.service.KafkaService;
 import jakarta.validation.Valid;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -16,6 +18,8 @@ import java.util.UUID;
 public class BookCommandController {
     @Autowired
     private CommandGateway commandGateway;
+    @Autowired
+    private KafkaService kafkaService;
 
     @PostMapping
     public String createBook(@Valid @RequestBody BookRequestModel request) {
@@ -46,4 +50,12 @@ public class BookCommandController {
                 .build();
         return commandGateway.sendAndWait(command);
     }
+
+    //Test Kafka
+    @PostMapping("/kafka/sendMessage")
+    public ResponseEntity<String> sendMessage(@RequestBody String request) {
+        kafkaService.sendMessage("test", request);
+        return ResponseEntity.ok("Message sent: " + request);
+    }
+
 }
