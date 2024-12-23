@@ -23,6 +23,17 @@ spring:
                 redis-rate-limiter.burstCapacity: 100  #Tối đa có ? request trong một token
                 redis-rate-limiter.requestedTokens: 1   #1 request cần ? token
             - KeyAuthFilter
+        - id: BorrowingService
+          uri: lb://BorrowingService
+          predicates:
+            - Path=/api/v1/borrowing/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 50   #Nạp lại được ? token trong 1s
+                redis-rate-limiter.burstCapacity: 100  #Tối đa có ? request trong một token
+                redis-rate-limiter.requestedTokens: 1   #1 request cần ? token
+            - KeyAuthFilter
         - id: BookService
           uri: lb://BookService
           predicates:

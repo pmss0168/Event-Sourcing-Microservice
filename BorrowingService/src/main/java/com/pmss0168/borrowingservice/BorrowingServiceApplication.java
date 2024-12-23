@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@ComponentScan("{com.pmss0168.borrowingservice}, {com.pmss0168.commonservice}")
+@ComponentScan({"com.pmss0168.borrowingservice", "com.pmss0168.commonservice"})
 public class BorrowingServiceApplication {
 
 	public static void main(String[] args) {
