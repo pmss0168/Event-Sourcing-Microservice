@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: BorrowingService
+  datasource:
+    url: jdbc:h2:mem:borrowingdb
+    driver-class-name: org.h2.Driver
+    username: root
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+server:
+  port: 9004
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+#Swagger
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs

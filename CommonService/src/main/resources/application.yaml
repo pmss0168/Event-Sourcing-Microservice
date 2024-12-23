@@ -6,5 +6,18 @@ spring:
     consumer:
       group-id: ${KAFKA_GROUP_ID:default-group}
       auto-offset-reset: ${KAFKA_AUTO_OFFSET_RESET:earliest}
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: phamden616@gmail.com
+    password: exujzspxsslyxhju
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+        transport:
+          protocol: smtp
 server:
   port: 9000
