@@ -1,21 +1,20 @@
-    package com.pmss0168.borrowingservice.command.event;
+package com.pmss0168.commonservice.command;
 
 import lombok.*;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
-
-import java.util.Date;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BorrowingCreateEvent {
-    private String id;
-
+public class UpdateStatusBookCommand {
+    @TargetAggregateIdentifier
     private String bookId;
+
+    private Boolean isReleased;
 
     private String employeeId;
 
-    private Date borrowingDate;
+    private String borrowingId;
 }

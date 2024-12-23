@@ -2,9 +2,9 @@ package com.pmss0168.bookservice.query.projection;
 
 import com.pmss0168.bookservice.command.data.Book;
 import com.pmss0168.bookservice.command.data.BookRepository;
-import com.pmss0168.bookservice.query.model.BookResponseModel;
 import com.pmss0168.bookservice.query.queries.GetAllBookQuery;
-import com.pmss0168.bookservice.query.queries.GetBookDetailQuery;
+import com.pmss0168.commonservice.model.BookResponseModel;
+import com.pmss0168.commonservice.query.GetBookDetailQuery;
 import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

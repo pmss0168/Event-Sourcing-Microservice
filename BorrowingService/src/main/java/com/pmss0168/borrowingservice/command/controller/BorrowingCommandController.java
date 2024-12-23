@@ -20,7 +20,7 @@ public class BorrowingCommandController {
     private CommandGateway commandGateway;
 
     @PostMapping
-    public String createBorrowing(@Valid @RequestBody BorrowingCreateRequestModel request){
+    public String createBorrowing(@RequestBody BorrowingCreateRequestModel request){
         CreateBorrowingCommand command = CreateBorrowingCommand.builder()
                 .id(UUID.randomUUID().toString())
                 .bookId(request.getBookId())

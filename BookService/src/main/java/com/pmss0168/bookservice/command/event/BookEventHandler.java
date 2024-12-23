@@ -2,6 +2,8 @@ package com.pmss0168.bookservice.command.event;
 
 import com.pmss0168.bookservice.command.data.Book;
 import com.pmss0168.bookservice.command.data.BookRepository;
+import com.pmss0168.commonservice.event.BookRollBackStatusEvent;
+import com.pmss0168.commonservice.event.BookUpdateStatusEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.eventhandling.DisallowReplay;
 import org.axonframework.eventhandling.EventHandler;
@@ -43,5 +45,21 @@ public class BookEventHandler {
         } catch (RuntimeException e) {
             log.error(e.getMessage());
         }
+    }
+
+    @EventHandler
+    public void on(BookUpdateStatusEvent event) {
+        log.info("Book Updated Status");
+        Book book = bookRepository.findById(event.getBookId()).orElseThrow(() -> new RuntimeException("Book Not Found"));
+        book.setIsReleased(event.getIsReleased());
+        bookRepository.save(book);
+    }
+
+    @EventHandler
+    public void on(BookRollBackStatusEvent event) {
+        log.info("Book Roll Back Status");
+        Book book = bookRepository.findById(event.getBookId()).orElseThrow(() -> new RuntimeException("Book Not Found"));
+        book.setIsReleased(event.getIsReleased());
+        bookRepository.save(book);
     }
 }

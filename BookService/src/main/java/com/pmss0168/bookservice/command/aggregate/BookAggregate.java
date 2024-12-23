@@ -6,6 +6,10 @@ import com.pmss0168.bookservice.command.command.UpdateBookCommand;
 import com.pmss0168.bookservice.command.event.BookCreateEvent;
 import com.pmss0168.bookservice.command.event.BookDeleteEvent;
 import com.pmss0168.bookservice.command.event.BookUpdateEvent;
+import com.pmss0168.commonservice.command.RollBackStatusBookCommand;
+import com.pmss0168.commonservice.command.UpdateStatusBookCommand;
+import com.pmss0168.commonservice.event.BookRollBackStatusEvent;
+import com.pmss0168.commonservice.event.BookUpdateStatusEvent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,6 +45,14 @@ public class BookAggregate {
         AggregateLifecycle.apply(bookCreateEvent);
     }
 
+    @EventSourcingHandler
+    public void on(BookCreateEvent event) {
+        this.id = event.getId();
+        this.name = event.getName();
+        this.author = event.getAuthor();
+        this.isReleased = event.getIsReleased();
+    }
+
     /**
      * Xu ly su kien cap nhat mot book
      * */
@@ -49,6 +61,14 @@ public class BookAggregate {
         BookUpdateEvent bookUpdateEvent = new BookUpdateEvent();
         BeanUtils.copyProperties(command, bookUpdateEvent);
         AggregateLifecycle.apply(bookUpdateEvent);
+    }
+
+    @EventSourcingHandler
+    public void on(BookUpdateEvent event) {
+        this.id = event.getId();
+        this.name = event.getName();
+        this.author = event.getAuthor();
+        this.isReleased = event.getIsReleased();
     }
 
     /**
@@ -62,23 +82,33 @@ public class BookAggregate {
     }
 
     @EventSourcingHandler
-    public void on(BookCreateEvent event) {
-        this.id = event.getId();
-        this.name = event.getName();
-        this.author = event.getAuthor();
-        this.isReleased = event.getIsReleased();
-    }
-
-    @EventSourcingHandler
-    public void on(BookUpdateEvent event) {
-        this.id = event.getId();
-        this.name = event.getName();
-        this.author = event.getAuthor();
-        this.isReleased = event.getIsReleased();
-    }
-
-    @EventSourcingHandler
     public void on(BookDeleteEvent event) {
         this.id = event.getId();
+    }
+
+    @CommandHandler
+    public void handle(UpdateStatusBookCommand command) {
+        BookUpdateStatusEvent event = new BookUpdateStatusEvent();
+        BeanUtils.copyProperties(command, event);
+        AggregateLifecycle.apply(event);
+    }
+
+    @EventSourcingHandler
+    public void on(BookUpdateStatusEvent event) {
+        this.id = event.getBookId();
+        this.isReleased = event.getIsReleased();
+    }
+
+    @CommandHandler
+    public void handle(RollBackStatusBookCommand command){
+        BookRollBackStatusEvent event = new BookRollBackStatusEvent();
+        BeanUtils.copyProperties(command, event);
+        AggregateLifecycle.apply(event);
+    }
+
+    @EventSourcingHandler
+    public void on(BookRollBackStatusEvent event) {
+        this.id = event.getBookId();
+        this.isReleased = event.getIsReleased();
     }
 }

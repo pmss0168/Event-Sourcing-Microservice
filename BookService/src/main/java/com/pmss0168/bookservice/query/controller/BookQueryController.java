@@ -1,8 +1,8 @@
 package com.pmss0168.bookservice.query.controller;
 
-import com.pmss0168.bookservice.query.model.BookResponseModel;
 import com.pmss0168.bookservice.query.queries.GetAllBookQuery;
-import com.pmss0168.bookservice.query.queries.GetBookDetailQuery;
+import com.pmss0168.commonservice.model.BookResponseModel;
+import com.pmss0168.commonservice.query.GetBookDetailQuery;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.beans.factory.annotation.Autowired;

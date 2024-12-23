@@ -1,4 +1,4 @@
-    package com.pmss0168.borrowingservice.command.event;
+package com.pmss0168.borrowingservice.command.command;
 
 import lombok.*;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
@@ -10,12 +10,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BorrowingCreateEvent {
+public class DeleteBorrowingCommand {
+    @TargetAggregateIdentifier
     private String id;
-
-    private String bookId;
-
-    private String employeeId;
-
-    private Date borrowingDate;
 }

@@ -1,8 +1,8 @@
 package com.pmss0168.employeeservice.query.controller;
 
-import com.pmss0168.employeeservice.query.model.EmployeeResponseModel;
+import com.pmss0168.commonservice.model.EmployeeResponseModel;
+import com.pmss0168.commonservice.query.GetEmployeeDetailQuery;
 import com.pmss0168.employeeservice.query.queries.GetAllEmployeeQuery;
-import com.pmss0168.employeeservice.query.queries.GetEmployeeDetailQuery;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;

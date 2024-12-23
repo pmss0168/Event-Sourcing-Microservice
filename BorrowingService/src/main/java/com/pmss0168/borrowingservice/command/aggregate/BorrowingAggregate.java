@@ -1,7 +1,9 @@
 package com.pmss0168.borrowingservice.command.aggregate;
 
 import com.pmss0168.borrowingservice.command.command.CreateBorrowingCommand;
+import com.pmss0168.borrowingservice.command.command.DeleteBorrowingCommand;
 import com.pmss0168.borrowingservice.command.event.BorrowingCreateEvent;
+import com.pmss0168.borrowingservice.command.event.BorrowingDeleteEvent;
 import lombok.*;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -17,6 +19,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 public class BorrowingAggregate {
+
     @AggregateIdentifier
     private String id;
 
@@ -29,17 +32,28 @@ public class BorrowingAggregate {
     private Date returnDate;
 
     @CommandHandler
-    public BorrowingAggregate(CreateBorrowingCommand command) {
+    public BorrowingAggregate(CreateBorrowingCommand command){
         BorrowingCreateEvent event = new BorrowingCreateEvent();
-        BeanUtils.copyProperties(command, event);
+        BeanUtils.copyProperties(command,event);
+        AggregateLifecycle.apply(event);
+    }
+
+    @CommandHandler
+    public void handle(DeleteBorrowingCommand command){
+        BorrowingDeleteEvent event = new BorrowingDeleteEvent(command.getId());
         AggregateLifecycle.apply(event);
     }
 
     @EventSourcingHandler
-    public void on(BorrowingCreateEvent event) {
+    public void on(BorrowingCreateEvent event){
         this.id = event.getId();
         this.bookId = event.getBookId();
         this.employeeId = event.getEmployeeId();
         this.borrowingDate = event.getBorrowingDate();
+    }
+
+    @EventSourcingHandler
+    public void on(BorrowingDeleteEvent event){
+        this.id = event.getId();
     }
 }

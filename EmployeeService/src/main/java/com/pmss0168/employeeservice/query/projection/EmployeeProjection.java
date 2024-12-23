@@ -1,10 +1,10 @@
 package com.pmss0168.employeeservice.query.projection;
 
+import com.pmss0168.commonservice.model.EmployeeResponseModel;
+import com.pmss0168.commonservice.query.GetEmployeeDetailQuery;
 import com.pmss0168.employeeservice.command.data.Employee;
 import com.pmss0168.employeeservice.command.data.EmployeeRepository;
-import com.pmss0168.employeeservice.query.model.EmployeeResponseModel;
 import com.pmss0168.employeeservice.query.queries.GetAllEmployeeQuery;
-import com.pmss0168.employeeservice.query.queries.GetEmployeeDetailQuery;
 import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
