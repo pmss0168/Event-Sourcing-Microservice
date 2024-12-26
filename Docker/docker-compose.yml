@@ -1,6 +1,22 @@
 ---
     version: '2'
     services:
+      axonserver:
+        image: "axoniq/axonserver:latest"
+        hostname: axonserver
+        container_name: axonserver
+        environment:
+            - "AXONIQ_AXONSERVER_STANDALONE=TRUE"
+        ports:
+            - "8024:8024"
+            - "8124:8124"
+            - "8224:8224"
+      redis:
+        image: redis:latest
+        restart: always
+        hostname: redis
+        ports:
+            - "6379:6379"
       zookeeper:
         image: confluentinc/cp-zookeeper:7.7.0
         hostname: zookeeper
@@ -10,7 +26,6 @@
         environment:
           ZOOKEEPER_CLIENT_PORT: 2181
           ZOOKEEPER_TICK_TIME: 2000
-    
       broker:
         image: confluentinc/cp-server:7.7.0
         hostname: broker
@@ -38,7 +53,6 @@
           CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
           CONFLUENT_METRICS_ENABLE: 'true'
           CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
-    
       control-center:
         image: confluentinc/cp-enterprise-control-center:7.7.0
         hostname: control-center
@@ -54,4 +68,3 @@
           CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
           CONFLUENT_METRICS_TOPIC_REPLICATION: 1
           PORT: 9021
-    

@@ -2,13 +2,15 @@ spring:
   application:
     name: NotificationService
   kafka:
-    bootstrap-servers: localhost:9092
     consumer:
       group-id: notification-group
-      auto-offset-reset: earliest
 server:
   port: 9003
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+#      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://discoverserver:8761/eureka
+axon:
+  axonserver:
+    servers: axonserver:8124

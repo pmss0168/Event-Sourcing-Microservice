@@ -18,10 +18,14 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+#      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://discoverserver:8761/eureka
 #Swagger
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
   api-docs:
     path: /v3/api-docs
+axon:
+  axonserver:
+    servers: axonserver:8124
