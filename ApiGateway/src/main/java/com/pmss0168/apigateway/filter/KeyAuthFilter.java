@@ -1,13 +1,19 @@
 package com.pmss0168.apigateway.filter;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -17,9 +23,11 @@ import java.time.ZonedDateTime;
 public class KeyAuthFilter extends AbstractGatewayFilterFactory<KeyAuthFilter.Config> {
     @Value("${auth-key}")
     private String authKey;
+    private final WebClient.Builder webClientBuilder;
 
-    public KeyAuthFilter() {
+    public KeyAuthFilter(WebClient.Builder webClientBuilder) {
         super(Config.class);
+        this.webClientBuilder = webClientBuilder;
     }
 
     static class Config {
@@ -28,29 +36,30 @@ public class KeyAuthFilter extends AbstractGatewayFilterFactory<KeyAuthFilter.Co
 
     @Override
     public GatewayFilter apply(Config config) {
-        return (exchange, chain) ->{
-            if(!exchange.getRequest().getHeaders().containsKey("Auth-Key")) {
-                return handleFilterException(exchange, "Missing authorization", HttpStatus.UNAUTHORIZED);
-//                throw new RuntimeException("Missing authorization information");
+        return (exchange, chain) -> {
+            if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+                throw new RuntimeException("Missing authorization information");
             }
-            String authKey = exchange.getRequest().getHeaders().get("Auth-Key").getFirst();
-            if(authKey == null || authKey.isEmpty() || !authKey.equals(this.authKey)) {
-                return handleFilterException(exchange, "Invalid authorization", HttpStatus.FORBIDDEN);
-//                throw new RuntimeException("Invalid authorization information");
+
+            String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+
+            String[] parts = authHeader.split(" ");
+
+            if (parts.length != 2 || !"Bearer".equals(parts[0])) {
+                throw new RuntimeException("Incorrect authorization structure");
             }
-            ServerHttpRequest request = exchange.getRequest();
+
+            Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            DecodedJWT decodedJWT = verifier.verify(parts[1]);
+            String username = decodedJWT.getSubject();
+            if (username == "" || username == null) {
+                throw new RuntimeException("Athorization error");
+            }
+            ServerHttpRequest request = exchange.getRequest().mutate().
+                    header("X-auth-username", username).
+                    build();
             return chain.filter(exchange.mutate().request(request).build());
         };
-    }
-
-    private Mono<Void> handleFilterException(ServerWebExchange exchange, String message, HttpStatus status) {
-        ServerHttpResponse response = exchange.getResponse();
-        response.setStatusCode(status);
-        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-        String errorResponse = String.format(
-                "{\"timestamp\": \"%s\", \"status\": \"%d\", \"error\": \"%s\", \"path\": \"%s\"}",
-                ZonedDateTime.now().toString(), status.value(), message, exchange.getRequest().getPath()
-        );
-        return response.writeWith(Mono.just(response.bufferFactory().wrap(errorResponse.getBytes())));
     }
 }

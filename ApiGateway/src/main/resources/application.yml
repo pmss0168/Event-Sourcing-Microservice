@@ -56,11 +56,12 @@ server:
   port: 8080
 eureka:
   instance:
-    hostname: discoverserver
+    hostname: localhost
+#    hostname: discoverserver
   client:
     service-url:
-#      defaultZone: http://localhost:8761/eureka
-      defaultZone: http://discoverserver:8761/eureka
+      defaultZone: http://localhost:8761/eureka
+#      defaultZone: http://discoverserver:8761/eureka
     register-with-eureka: true
     fetch-registry: true
 auth-key: pmss0168

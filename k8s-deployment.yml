@@ -1,0 +1,73 @@
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discoverserver-deployment
+  labels:
+    app: discoverserver
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: discoverserver
+  template:
+    metadata:
+      labels:
+        app: discoverserver
+    spec:
+      containers:
+        - name: discoverserver
+          image: eventsourcingmicroservice-discoverserver:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8761
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigateway-deployment
+  labels:
+    app: apigateway
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: apigateway
+  template:
+    metadata:
+      labels:
+        app: apigateway
+    spec:
+      containers:
+        - name: apigateway
+          image: eventsourcingmicroservice-apigateway:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: discoverserver
+spec:
+  selector:
+    app: discoverserver
+  ports:
+    - protocol: TCP
+      port: 8761
+      targetPort: 8761
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apigateway
+spec:
+  selector:
+    app: apigateway
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: NodePort

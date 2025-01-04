@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+    redis:
+        image: redis:latest
+        restart: always
+        hostname: redis
+        ports:
+            - "6379:6379"
+        networks:
+            - event-sourcing-mcs
+    discoverserver:
+        build:
+            context: .
+            dockerfile: discoverserver/Dockerfile
+        ports:
+            - "8761:8761"
+        networks:
+            - event-sourcing-mcs
+    apigateway:
+        build:
+            context: .
+            dockerfile: apigateway/Dockerfile
+        ports:
+            - "8080:8080"
+        networks:
+            - event-sourcing-mcs
+        depends_on:
+            - discoverserver
+            - redis
+networks:
+    event-sourcing-mcs:
+        driver: bridge

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+<!--  Table Book  -->
+    <changeSet id="create-table-book" author="peemech">
+        <preConditions onFail="CONTINUE" onFailMessage="table book already exists">
+            <not>
+                <tableExists tableName="books" />
+            </not>
+        </preConditions>
+        <createTable tableName="books">
+            <column name="id" type="varchar(255)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="add-name-column-table-book" author="peemech">
+        <preConditions>
+            <not>
+                <columnExists tableName="books" columnName="name" />
+            </not>
+        </preConditions>
+        <addColumn tableName="books">
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="add-author-column-table-book" author="peemech">
+        <preConditions>
+            <not>
+                <columnExists tableName="books" columnName="author" />
+            </not>
+        </preConditions>
+        <addColumn tableName="books">
+            <column name="author" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="add-is_released-column-table-book" author="peemech">
+        <preConditions>
+            <not>
+                <columnExists tableName="books" columnName="is_released" />
+            </not>
+        </preConditions>
+        <addColumn tableName="books">
+            <column name="is_released" type="bit(1)">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
+    
+</databaseChangeLog>
